@@ -2,8 +2,11 @@
   "name": "ethermine-worker-status-scraper",
   "version": "0.0.1",
   "description": "Scrape the status of ethermine workers.",
-  "main": "index.js",
-  "scripts": {},
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "npm run build && node dist/index.js",
+    "build": "tsc"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/PairedPrototype/ethermine-worker-status-scraper.git"
@@ -19,5 +22,9 @@
     "cheerio": "^1.0.0-rc.9",
     "puppeteer": "^9.1.1",
     "yargs": "^17.0.1"
+  },
+  "devDependencies": {
+    "@types/yargs": "^16.0.1",
+    "typescript": "^4.2.4"
   }
 }
