@@ -24,6 +24,8 @@
     "yargs": "^17.0.1"
   },
   "devDependencies": {
+    "@types/cheerio": "^0.22.28",
+    "@types/puppeteer": "^5.4.3",
     "@types/yargs": "^16.0.1",
     "typescript": "^4.2.4"
   }
