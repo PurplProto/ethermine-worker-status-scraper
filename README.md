@@ -6,7 +6,7 @@
 1. Clone this repo
 1. cd into the cloned repo
 1. run `npm install`
-1. run `npm build`
+1. run `npm run build`
 1. run `node dist/index.js get "https://ethermine.org/miners/useridhere/dashboard"`
 
 ## TODO
