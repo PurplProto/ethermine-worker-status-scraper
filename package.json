@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "Scrape the status of ethermine workers.",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
     "start": "npm run build && node dist/index.js",
     "build": "tsc"
