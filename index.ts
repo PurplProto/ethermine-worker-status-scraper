@@ -18,10 +18,12 @@ function doLogThings(message: string) {
 
 function pageError(message: string) {
   console.error(
+    '\x1b[31m', // Make output red
     `${message}. Potential issues to consider:`,
     `\n\t- Is the URL "${url}" correct?`,
     '\n\t- Is the website expirencing issues?',
     '\n\t- Has the element selector changed?',
+    '\x1b[0m', // Reset terminal colour
   );
   process.exit(1);
 }
