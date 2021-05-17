@@ -109,14 +109,17 @@ yargs(hideBin(process.argv))
   .command(
     '$0 <url>',
     'get the worker status from <url>',
-    (yargs) => { yargs.positional('<url>', { description: 'Used to get the worker status from' }); },
+    (yargs) => yargs.positional(
+      '<url>',
+      { description: 'Used to get the worker status from' },
+    ).wrap(yargs.terminalWidth()),
     async (argv) => {
       loggingEnabled = argv.verbose ?? false;
       scriptPath = argv.$0;
       const rawUrl = (argv.url as string) ?? null;
 
       if (!rawUrl || rawUrl.length === 0) {
-        console.error(`Did not get anything to work with. Try running: \n$  ${scriptPath} --help\n`);
+        console.error(`Did not get anything to work with. Try running: \n$ ${scriptPath} --help\n`);
         process.exit(22);
       }
 
