@@ -34,7 +34,6 @@ async function castThyStatusUponYe(selector: string) {
   const page = await browser.newPage();
 
   page.on('requestfailed', async (error) => {
-    await browser.close();
     console.error(
       `Failure when trying to navigate to: ${url.href}.`,
       `\nThe following error description may give a clue as to what when wrong: `,
