@@ -14,7 +14,7 @@ interface BadNews {
 let loggingEnabled = true;
 let scriptPath: string = '';
 let setExitCode: boolean;
-let url: URL = new URL('https://example.com');
+let url: URL;
 
 function doLogThings(message: string) {
   if (loggingEnabled) {
