@@ -29,8 +29,7 @@ function breakSomeBadNews({ messages, addConsiderations = false, exitCode = 1 }:
     '\n\t- Has the element selector changed?';
 
   console.error(
-    '\x1b[31m', // Make output red
-    '[ERROR]',
+    '\x1b[31m[ERROR]', // Make output red
     ...messages,
     addConsiderations ? thingsToTry : '',
     '\x1b[0m', // Reset terminal colour
