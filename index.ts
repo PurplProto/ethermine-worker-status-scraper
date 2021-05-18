@@ -16,7 +16,7 @@ function doLogThings(message: string) {
   }
 }
 
-function pageError(message: string) {
+function breakBadNews(message: string) {
   console.error(
     '\x1b[31m', // Make output red
     `${message}. Potential issues to consider:`,
@@ -46,7 +46,7 @@ async function castThyStatusUponYe(selector: string) {
 
   page.on('response', (response) => {
     if (response.status() < 200 || response.status() > 300) {
-      pageError(`The request returned a non-success status of "${response.status()}: ${response.statusText()}"`);
+      breakBadNews(`The request returned a non-success status of "${response.status()}: ${response.statusText()}"`);
     }
   });
 
@@ -66,7 +66,7 @@ async function castThyStatusUponYe(selector: string) {
   const element = $(selector);
 
   if (element.length !== 1) {
-    pageError('Couldn\'t find the element');
+    breakBadNews('Couldn\'t find the element');
   }
 
   doLogThings('Found an element');
@@ -75,7 +75,7 @@ async function castThyStatusUponYe(selector: string) {
   const numberOfInactiveWorkers = Number.parseInt(element.text());
 
   if (isNaN(numberOfInactiveWorkers)) {
-    pageError('Couldn\'t parse a number');
+    breakBadNews('Couldn\'t parse a number');
   }
 
   // Print the count
