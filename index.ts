@@ -5,10 +5,16 @@ import { URL } from 'url';
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 
+interface BadNews {
+  messages: string[];
+  addConsiderations?: boolean;
+  exitCode?: number;
+}
+
 let loggingEnabled = true;
 let scriptPath: string = '';
 let setExitCode: boolean;
-let url: URL;
+let url: URL = new URL('https://example.com');
 
 function doLogThings(message: string) {
   if (loggingEnabled) {
@@ -16,16 +22,20 @@ function doLogThings(message: string) {
   }
 }
 
-function breakBadNews(message: string) {
+function breakSomeBadNews({ messages, addConsiderations = false, exitCode = 1 }: BadNews) {
+  const thingsToTry = '\nPotential issues to consider:' +
+    `\n\t- Is the URL "${url.href}" correct?` +
+    '\n\t- Is the website expirencing issues?' +
+    '\n\t- Has the element selector changed?';
+
   console.error(
     '\x1b[31m', // Make output red
-    `${message}. Potential issues to consider:`,
-    `\n\t- Is the URL "${url}" correct?`,
-    '\n\t- Is the website expirencing issues?',
-    '\n\t- Has the element selector changed?',
+    ...messages,
+    addConsiderations ? thingsToTry : '',
     '\x1b[0m', // Reset terminal colour
   );
-  process.exit(1);
+
+  process.exit(exitCode);
 }
 
 async function castThyStatusUponYe(selector: string) {
@@ -36,17 +46,20 @@ async function castThyStatusUponYe(selector: string) {
   const page = await browser.newPage();
 
   page.on('requestfailed', async (error) => {
-    console.error(
-      `Failure when trying to navigate to: ${url.href}.`,
-      `\nThe following error description may give a clue as to what when wrong: `,
-      error._failureText,
-    );
-    process.exit(1);
+    breakSomeBadNews({
+      messages: [
+        `Failure when trying to navigate to: ${url.href}.`,
+        `\nThe following error description may give a clue as to what when wrong: `,
+        error._failureText,
+      ]
+    });
   });
 
   page.on('response', (response) => {
     if (response.status() < 200 || response.status() > 300) {
-      breakBadNews(`The request returned a non-success status of "${response.status()}: ${response.statusText()}"`);
+      breakSomeBadNews({
+        messages: [`The request returned a non-success status of "${response.status()}: ${response.statusText()}"`],
+      });
     }
   });
 
@@ -66,7 +79,7 @@ async function castThyStatusUponYe(selector: string) {
   const element = $(selector);
 
   if (element.length !== 1) {
-    breakBadNews('Couldn\'t find the element');
+    breakSomeBadNews({ messages: ['Couldn\'t find the element'], addConsiderations: true });
   }
 
   doLogThings('Found an element');
@@ -75,7 +88,7 @@ async function castThyStatusUponYe(selector: string) {
   const numberOfInactiveWorkers = Number.parseInt(element.text());
 
   if (isNaN(numberOfInactiveWorkers)) {
-    breakBadNews('Couldn\'t parse a number');
+    breakSomeBadNews({ messages: ['Couldn\'t parse a number'], addConsiderations: true });
   }
 
   // Print the count
@@ -121,8 +134,10 @@ yargs(hideBin(process.argv))
       const rawUrl = (argv.url as string) ?? null;
 
       if (!rawUrl || rawUrl.length === 0) {
-        console.error(`Did not get anything to work with. Try running: \n$ ${scriptPath} --help\n`);
-        process.exit(22);
+        breakSomeBadNews({
+          messages: [`Did not get anything to work with. Try running: \n$ ${scriptPath} --help\n`],
+          exitCode: 22
+        });
       }
 
       try {
@@ -132,8 +147,7 @@ yargs(hideBin(process.argv))
           url = new URL('http://' + rawUrl);
         }
       } catch (error) {
-        console.error(`"${rawUrl}" is not a vaild URL!`);
-        process.exit(1);
+        breakSomeBadNews({ messages: [`"${rawUrl}" is not a vaild URL!`] });
       }
 
       const selector: string = argv.selector;
