@@ -18,7 +18,7 @@ let url: URL = new URL('https://example.com');
 
 function doLogThings(message: string) {
   if (loggingEnabled) {
-    console.log(message);
+    console.log('[VERBOSE]', message);
   }
 }
 
@@ -30,6 +30,7 @@ function breakSomeBadNews({ messages, addConsiderations = false, exitCode = 1 }:
 
   console.error(
     '\x1b[31m', // Make output red
+    '[ERROR]',
     ...messages,
     addConsiderations ? thingsToTry : '',
     '\x1b[0m', // Reset terminal colour
